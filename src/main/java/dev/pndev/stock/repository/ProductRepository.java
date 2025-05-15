@@ -7,14 +7,15 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
-public interface ProductRepository extends JpaRepository <ProductEntity, Long>{
-
+public interface ProductRepository extends JpaRepository<ProductEntity, Long> {
 
     List<ProductEntity> findAllByQuantityLessThan(int threshold);
 
     @Query("SELECT CASE WHEN p.quantity < 5 THEN true ELSE false END FROM ProductEntity p WHERE p.id = :id")
     boolean isProductReplenishById(@Param("id") Long id);
 
+    Optional<ProductEntity> findByName(String name);
 }

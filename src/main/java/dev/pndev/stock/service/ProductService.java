@@ -33,7 +33,12 @@ public class ProductService {
     }
 
     public ProductEntity registerProduct(ProductEntity productEntity) {
-        return productRepository.save(productEntity);
+        return productRepository.findByName(productEntity.getName())
+                .map(existingProduct -> {
+                    existingProduct.setStock(existingProduct.getStock() + productEntity.getStock());
+                    return productRepository.save(existingProduct);
+                })
+                .orElseGet(() -> productRepository.save(productEntity));
     }
 
     public ProductEntity updateProduct(Long id, ProductEntity productEntity) {

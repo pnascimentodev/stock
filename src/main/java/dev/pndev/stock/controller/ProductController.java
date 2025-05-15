@@ -20,7 +20,9 @@ public class ProductController {
     @PostMapping()
     public ResponseEntity<ProductResponseDTO> registerProduct(@RequestBody ProductRequestDTO productRequestDTO) {
         ProductEntity productEntity = productService.registerProduct(productRequestDTO.toProduct());
-        return ResponseEntity.ok(ProductResponseDTO.from(productEntity));
+        return ResponseEntity.created(null).body(
+                ProductResponseDTO.from(productEntity)
+        );
     }
 
     @PutMapping("/update/{id}")

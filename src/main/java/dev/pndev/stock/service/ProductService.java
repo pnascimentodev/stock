@@ -35,6 +35,10 @@ public class ProductService {
     public ProductEntity registerProduct(ProductEntity productEntity) {
         return productRepository.findByName(productEntity.getName())
                 .map(existingProduct -> {
+                    if (!existingProduct.getPrice().equals(productEntity.getPrice())) {
+                        throw new DomainException(DomainException.ErrorType.INVALID_PRODUCT_OPERATION,
+                                "Product price mismatch");
+                    }
                     existingProduct.setStock(existingProduct.getStock() + productEntity.getStock());
                     return productRepository.save(existingProduct);
                 })

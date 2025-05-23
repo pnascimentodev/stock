@@ -4,8 +4,12 @@ import dev.pndev.stock.dto.ProductRequestDTO;
 import dev.pndev.stock.dto.ProductResponseDTO;
 import dev.pndev.stock.model.ProductEntity;
 import dev.pndev.stock.service.ProductService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/products")
@@ -18,7 +22,7 @@ public class ProductController {
     }
 
     @PostMapping()
-    public ResponseEntity<ProductResponseDTO> registerProduct(@RequestBody ProductRequestDTO productRequestDTO) {
+    public ResponseEntity<ProductResponseDTO> registerProduct(@RequestBody @Valid ProductRequestDTO productRequestDTO) {
         ProductEntity productEntity = productService.registerProduct(productRequestDTO.toProduct());
         return ResponseEntity.created(null).body(
                 ProductResponseDTO.from(productEntity)
@@ -38,6 +42,21 @@ public class ProductController {
     public ResponseEntity<ProductResponseDTO> findProduct(@PathVariable Long id) {
         ProductEntity productEntity = productService.findProduct(id);
         return ResponseEntity.ok(ProductResponseDTO.from(productEntity));
+    }
+
+    @GetMapping("/low-stock")
+    public ResponseEntity<List<ProductResponseDTO>> getLowStockProducts() {
+        List<ProductEntity> lowStockProducts = productService.getAllLowStockProducts();
+        List<ProductResponseDTO> response = lowStockProducts.stream()
+                .map(ProductResponseDTO::from)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/replenish/{id}")
+    public ResponseEntity<Boolean> isProductReplenish(@PathVariable Long id) {
+        boolean isReplenish = productService.isProductLowStock(id);
+        return ResponseEntity.ok(isReplenish);
     }
 
     @DeleteMapping("/{id}")

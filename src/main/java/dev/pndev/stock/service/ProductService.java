@@ -22,6 +22,9 @@ public class ProductService {
         return productRepository.findAllByQuantityLessThan(5);
     }
 
+    public List<ProductEntity> getAllProducts() {
+        return productRepository.findAll();
+    }
 
     public ProductService(ProductRepository productRepository) {
         this.productRepository = productRepository;

@@ -1,7 +1,3 @@
-LABEL authors="sebastian"
-
-ENTRYPOINT ["top", "-b"]
-
 # Usar uma imagem base com OpenJDK
 FROM eclipse-temurin:17-jdk-alpine
 

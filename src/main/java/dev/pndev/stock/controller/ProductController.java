@@ -29,6 +29,15 @@ public class ProductController {
         );
     }
 
+    @GetMapping("/all")
+    public ResponseEntity<List<ProductResponseDTO>> getAllProducts() {
+        List<ProductEntity> productEntities = productService.getAllProducts();
+        List<ProductResponseDTO> response = productEntities.stream()
+                .map(ProductResponseDTO::from)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(response);
+    }
+
     @PutMapping("/update/{id}")
     public ResponseEntity<ProductResponseDTO> updateProduct(
             @PathVariable Long id,
